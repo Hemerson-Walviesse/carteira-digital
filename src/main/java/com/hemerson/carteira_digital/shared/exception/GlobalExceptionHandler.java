@@ -45,4 +45,21 @@ public class GlobalExceptionHandler {
         problema.setTitle("Conflito");
         return problema;
     }
+
+    // 401: login falhou
+    @ExceptionHandler(CredenciaisInvalidasException.class)
+    public ProblemDetail credenciais(CredenciaisInvalidasException ex) {
+        ProblemDetail problema = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        problema.setTitle("Não autorizado");
+        return problema;
+    }
+
+    // 404: recurso não existe
+    @ExceptionHandler(RecursoNaoEncontradoException.class)
+    public ProblemDetail naoEncontrado(RecursoNaoEncontradoException ex) {
+        ProblemDetail problema = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problema.setTitle("Não encontrado");
+        return problema;
+    }
+
 }
