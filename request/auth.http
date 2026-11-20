@@ -1,0 +1,32 @@
+### 1. Cadastro válido → 201
+POST http://localhost:8080/auth/cadastro
+Content-Type: application/json
+
+{
+  "nome": "Hemerson Teste",
+  "cpf": "529.982.247-25",
+  "email": "Hemerson@Teste.com",
+  "senha": "senhaForte123"
+}
+
+### 2. Mesmo e-mail de novo → 409
+POST http://localhost:8080/auth/cadastro
+Content-Type: application/json
+
+{
+  "nome": "Outro",
+  "cpf": "111.444.777-35",
+  "email": "hemerson@teste.com",
+  "senha": "senhaForte123"
+}
+
+### 3. Dados inválidos → 400 com a lista de campos
+POST http://localhost:8080/auth/cadastro
+Content-Type: application/json
+
+{
+  "nome": "",
+  "cpf": "111.111.111-11",
+  "email": "nao-e-email",
+  "senha": "123"
+}
