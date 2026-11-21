@@ -1,9 +1,6 @@
 package com.hemerson.carteira_digital.auth.controller;
 
-import com.hemerson.carteira_digital.auth.dto.CadastroRequest;
-import com.hemerson.carteira_digital.auth.dto.LoginRequest;
-import com.hemerson.carteira_digital.auth.dto.TokenResponse;
-import com.hemerson.carteira_digital.auth.dto.UsuarioResponse;
+import com.hemerson.carteira_digital.auth.dto.*;
 import com.hemerson.carteira_digital.auth.service.AuthService;
 import com.hemerson.carteira_digital.auth.service.UsuarioService;
 import jakarta.validation.Valid;
@@ -38,4 +35,15 @@ public class AuthController {
     public UsuarioResponse me(@AuthenticationPrincipal Jwt jwt) {
         return usuarioService.buscarPorId(UUID.fromString(jwt.getSubject()));
     }
+    @PostMapping("/refresh")
+    public TokenResponse refresh(@RequestBody @Valid RefreshRequest request) {
+        return authService.refresh(request);
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(@RequestBody @Valid RefreshRequest request) {
+        authService.logout(request);
+    }
+
 }

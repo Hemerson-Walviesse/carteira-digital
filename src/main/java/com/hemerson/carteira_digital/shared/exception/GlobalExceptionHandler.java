@@ -62,4 +62,10 @@ public class GlobalExceptionHandler {
         return problema;
     }
 
+    @ExceptionHandler(TokenInvalidoException.class)
+    public ProblemDetail tokenInvalido(TokenInvalidoException ex) {
+        ProblemDetail problema = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        problema.setTitle("Não autorizado");
+        return problema;
+    }
 }

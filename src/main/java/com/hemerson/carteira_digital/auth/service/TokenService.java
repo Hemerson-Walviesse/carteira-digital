@@ -23,7 +23,7 @@ public class TokenService {
         this.expiracaoMinutos = expiracaoMinutos;
     }
 
-    public TokenResponse gerar(Usuario usuario) {
+    public String gerarAccessToken(Usuario usuario) {
         Instant agora = Instant.now();
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -36,8 +36,10 @@ public class TokenService {
                 .build();
 
         JwsHeader header = JwsHeader.with(MacAlgorithm.HS256).build();
-        String token = jwtEncoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
+        return jwtEncoder.encode(JwtEncoderParameters.from(header, claims)).getTokenValue();
+    }
 
-        return new TokenResponse(token, "Bearer", expiracaoMinutos * 60);
+    public long expiracaoEmSegundos() {
+        return expiracaoMinutos * 60;
     }
 }

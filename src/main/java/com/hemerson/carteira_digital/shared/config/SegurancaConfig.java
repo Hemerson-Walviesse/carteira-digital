@@ -35,7 +35,7 @@ public class SegurancaConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/auth/cadastro", "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/cadastro", "/auth/login", "/auth/refresh", "/auth/logout").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth

@@ -7,7 +7,10 @@ Content-Type: application/json
   "senha": "senhaForte123"
 }
 
-> {% client.global.set("token", response.body.accessToken); %}
+> {%
+    client.global.set("token", response.body.accessToken);
+    client.global.set("refresh", response.body.refreshToken);
+%}
 
 ### 5. Senha errada → 401
 POST http://localhost:8080/auth/login
@@ -37,3 +40,39 @@ Authorization: Bearer {{token}}
 ### 9. Token adulterado → 401
 GET http://localhost:8080/auth/me
 Authorization: Bearer {{token}}x
+
+### 10. Refresh → 200 com tokens NOVOS (guarda o antigo para o teste de roubo)
+POST http://localhost:8080/auth/refresh
+Content-Type: application/json
+
+{ "refreshToken": "{{refresh}}" }
+
+> {%
+    client.global.set("refreshAntigo", client.global.get("refresh"));
+    client.global.set("refresh", response.body.refreshToken);
+    client.global.set("token", response.body.accessToken);
+%}
+
+### 11. Reusar o refresh ANTIGO → 401 (simula o ladrão; revoga tudo)
+POST http://localhost:8080/auth/refresh
+Content-Type: application/json
+
+{ "refreshToken": "{{refreshAntigo}}" }
+
+### 12. Tentar o refresh NOVO → 401 também (o roubo derrubou a família inteira)
+POST http://localhost:8080/auth/refresh
+Content-Type: application/json
+
+{ "refreshToken": "{{refresh}}" }
+
+### 13. Logout (rode o 4 de novo antes, para ter um refresh válido) → 204
+POST http://localhost:8080/auth/logout
+Content-Type: application/json
+
+{ "refreshToken": "{{refresh}}" }
+
+### 14. Refresh depois do logout → 401
+POST http://localhost:8080/auth/refresh
+Content-Type: application/json
+
+{ "refreshToken": "{{refresh}}" }
